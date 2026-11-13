@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10151e">
+  <title>Logscope — Web Log Analyzer</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Logscope home"><span class="brand-mark">L</span><span>logscope<span class="brand-dot">.</span></span></a>
+      <div class="top-meta"><span class="live-dot"></span> Private, in-browser analysis</div>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div class="eyebrow">PROJECT <span>•</span> JSON LOG ANALYZER</div>
+        <h1>Make sense of your logs.</h1>
+        <p>Drop in a JSON or JSONL file to explore severity, events, and recurring errors. Your file stays in this browser.</p>
+      </section>
+
+      <section class="source-panel panel" aria-label="Choose a log file">
+        <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Choose or drop a JSON or JSONL log file">
+          <div class="upload-icon" aria-hidden="true">↑</div>
+          <div class="drop-copy"><strong>Drop your log file here</strong><span>JSON object, JSON array, or JSONL</span></div>
+          <button id="choose-file" class="button button-primary" type="button">Choose file</button>
+          <input id="file-input" type="file" accept=".json,.jsonl,application/json,text/plain" hidden>
+        </div>
+        <div class="source-footer">
+          <span id="file-status" class="file-status">No file loaded</span>
+          <div class="sample-controls"><select id="sample-select" aria-label="Choose a sample log format"><option value="jsonl">JSONL — API logs</option><option value="object">JSON object — health check</option><option value="array">JSON array — batch jobs</option><option value="errors">JSONL — repeated errors</option></select><button id="load-sample" class="text-button" type="button">Load sample</button></div>
+        </div>
+      </section>
+
+      <section id="dashboard" hidden>
+        <div class="section-heading"><div><div class="eyebrow">OVERVIEW</div><h2>Log snapshot</h2></div><button id="download-report" class="button button-quiet" type="button">↓ <span>Download JSON report</span></button></div>
+        <div class="stat-grid">
+          <article class="stat-card"><span class="stat-label">MATCHING RECORDS</span><strong id="stat-records">0</strong><span id="stat-records-note" class="stat-note">of 0 total records</span></article>
+          <article class="stat-card"><span class="stat-label">ERRORS</span><strong id="stat-errors" class="tone-error">0</strong><span class="stat-note">error and critical severity</span></article>
+          <article class="stat-card"><span class="stat-label">REPEATED ERRORS</span><strong id="stat-repeated">0</strong><span class="stat-note">same message appears 2+ times</span></article>
+          <article class="stat-card"><span class="stat-label">MALFORMED</span><strong id="stat-malformed" class="tone-warning">0</strong><span class="stat-note">invalid entries found while parsing</span></article>
+        </div>
+
+        <div class="insight-grid">
+          <article class="panel insight-card"><div class="card-heading"><div><div class="eyebrow">BREAKDOWN</div><h3>By severity</h3></div></div><div id="severity-breakdown" class="breakdown"></div></article>
+          <article class="panel insight-card"><div class="card-heading"><div><div class="eyebrow">FREQUENCY</div><h3>Top events</h3></div></div><div id="event-breakdown" class="breakdown"></div></article>
+        </div>
+
+        <section class="panel repeated-panel"><div class="card-heading"><div><div class="eyebrow">PATTERNS</div><h3>Repeated errors</h3></div><span id="repeat-count" class="small-count">0 groups</span></div><div id="repeated-list" class="repeated-list"></div></section>
+
+        <section class="panel records-panel">
+          <div class="records-heading"><div><div class="eyebrow">LOG EXPLORER</div><h3>Records</h3></div><span id="records-count" class="small-count">0 records</span></div>
+          <div class="filters">
+            <label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Search messages, events, fields…" autocomplete="off"></label>
+            <select id="severity-filter" aria-label="Filter by severity"><option value="">All severities</option></select>
+            <input id="event-filter" type="search" placeholder="Filter event…" aria-label="Filter by event">
+            <button id="clear-filters" class="text-button" type="button">Clear</button>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>SEVERITY</th><th>EVENT</th><th>MESSAGE</th><th>TIME</th><th>DETAILS</th></tr></thead><tbody id="records-body"></tbody></table></div>
+          <div id="empty-state" class="empty-state" hidden>No records match these filters.</div>
+          <p class="table-note">Showing up to 500 matching records. Use search and filters to narrow the list.</p>
+        </section>
+        <section id="issues-panel" class="panel issues-panel" hidden><div class="card-heading"><div><div class="eyebrow">INPUT QUALITY</div><h3>Malformed entries</h3></div><span id="issue-count" class="small-count">0 lines</span></div><div id="issues-list" class="issues-list"></div></section>
+      </section>
+    </main>
+    <footer><span>LOGSCOPE</span><span>Project 3 · Web Log Analyzer</span></footer>
+  </div>
+</body>
+</html>
